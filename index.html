@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#171717">
+  <title>Galeria</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./">Galeria</a>
+    <div class="tools">
+      <label class="search-wrap">
+        <span class="sr-only">Buscar arquivos</span>
+        <input id="search" type="search" placeholder="Buscar…" autocomplete="off">
+      </label>
+      <span id="count" class="count" aria-live="polite"></span>
+    </div>
+  </header>
+
+  <main>
+    <section id="gallery" class="gallery" aria-label="Mídias"></section>
+    <p id="empty" class="empty" hidden>Nenhuma mídia encontrada.</p>
+    <p id="loading" class="empty">Carregando galeria…</p>
+  </main>
+
+  <dialog id="viewer" class="viewer">
+    <button class="close" id="close" aria-label="Fechar">×</button>
+    <button class="nav prev" id="prev" aria-label="Mídia anterior">‹</button>
+    <div class="viewer-content" id="viewer-content"></div>
+    <button class="nav next" id="next" aria-label="Próxima mídia">›</button>
+    <div class="caption" id="caption"></div>
+  </dialog>
+
+  <script src="gallery.js"></script>
+</body>
+</html>
