@@ -26,8 +26,20 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Generate media index
+      - name: Install Pillow and ffmpeg
+        run: |
+          pip install pillow
+          command -v ffmpeg >/dev/null || (sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg)
+
+      - name: Generate media index and thumbnails
         run: python generate_manifest.py
+
+      - name: Assemble site (only what visitors need)
+        run: |
+          mkdir dist
+          cp index.html favs.html style.css gallery.js media.json robots.txt dist/
+          cp -r media thumbs dist/
+          rm -f dist/media/.gitkeep
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
@@ -35,7 +47,7 @@ jobs:
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: dist
 
   deploy:
     environment:
