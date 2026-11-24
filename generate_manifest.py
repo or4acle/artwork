@@ -109,20 +109,49 @@ def image_entry(path, rel, stat):
 def video_thumb(path, rel, stat, duration):
     if not (HAS_FFMPEG and MAKE_THUMBS):
         return None
+
     out = THUMBS / thumb_name(rel, stat, ".jpg")
-    if not out.exists():
-        seek = "1" if duration >= 3 else "0"
+
+    if out.exists():
+        return f"thumbs/{out.name}"
+
+    seek = "1" if duration >= 3 else "0"
+
+    try:
         result = subprocess.run(
-            ["ffmpeg", "-y", "-loglevel", "error", "-ss", seek, "-i", str(path),
-             "-frames:v", "1",
-             "-vf", f"scale={THUMB_MAX}:{THUMB_MAX}:force_original_aspect_ratio=decrease",
-             "-q:v", "4", str(out)],
-            capture_output=True, timeout=120,
+            [
+                "ffmpeg", "-y",
+                "-loglevel", "error",
+                "-ss", seek,
+                "-i", str(path),
+                "-frames:v", "1",
+                "-vf",
+                f"scale={THUMB_MAX}:{THUMB_MAX}:"
+                "force_original_aspect_ratio=decrease",
+                "-q:v", "4",
+                str(out),
+            ],
+            capture_output=True,
+            timeout=120,
         )
+
         if result.returncode != 0 or not out.exists():
             print(f"  ! no thumbnail for {rel}")
+            out.unlink(missing_ok=True)
             return None
-    return f"thumbs/{out.name}"
+
+        return f"thumbs/{out.name}"
+
+    except subprocess.TimeoutExpired:
+        print(f"  ! thumbnail timeout for {rel}")
+        out.unlink(missing_ok=True)
+        return None
+
+    except OSError as error:
+        print(f"  ! ffmpeg error for {rel}: {error}")
+        out.unlink(missing_ok=True)
+        return None
+
 
 
 def main():
