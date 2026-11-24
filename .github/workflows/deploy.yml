@@ -1,3 +1,4 @@
+
 name: Build and deploy gallery
 
 on:
@@ -12,11 +13,13 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -26,20 +29,28 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Install Pillow and ffmpeg
+      - name: Install Python dependencies
         run: |
-          pip install pillow
-          command -v ffmpeg >/dev/null || (sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg)
+          python -m pip install --upgrade pip
+          pip install pillow pillow-avif-plugin
+
+      - name: Install FFmpeg
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg
+          ffmpeg -version
+          ffprobe -version
 
       - name: Generate media index and thumbnails
         run: python generate_manifest.py
 
-      - name: Assemble site (only what visitors need)
+      - name: Assemble site
         run: |
-          mkdir dist
+          mkdir -p dist
           cp index.html favs.html style.css gallery.js media.json robots.txt dist/
           cp -r media thumbs dist/
           rm -f dist/media/.gitkeep
+          touch dist/.nojekyll
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
@@ -55,6 +66,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
+
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
