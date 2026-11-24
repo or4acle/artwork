@@ -2,22 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#171717">
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="noindex,nofollow,noarchive">
   <title>or4acle — Personal Gallery</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23222'/%3E%3Ccircle cx='16' cy='16' r='7' fill='none' stroke='%23ededed' stroke-width='3'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="style.css">
 </head>
 <body data-page="all">
   <header class="topbar">
-    <a class="brand" href="./">or4acle <span class="brand-muted">/ personal gallery</span></a>
+    <a class="brand" href="#/">or4acle <span class="brand-muted">/ personal gallery</span></a>
     <nav class="main-nav" aria-label="Main navigation">
-      <a class="nav-link active" href="./">All media</a>
-      <a class="nav-link" href="favs.html">Favourites <span id="fav-nav-count"></span></a>
+      <a class="nav-link active" data-view="all" href="#/">All media</a>
+      <a class="nav-link" data-view="favs" href="#/favs">Favourites <span id="fav-nav-count"></span></a>
     </nav>
     <div class="tools">
       <label class="search-wrap">
         <span class="sr-only">Search files</span>
-        <input id="search" type="search" placeholder="Search…" autocomplete="off">
+        <input id="search" type="search" placeholder="Search…  ( / )" autocomplete="off">
       </label>
       <span id="count" class="count" aria-live="polite"></span>
     </div>
@@ -29,22 +32,55 @@
         <h1 id="page-title">All media</h1>
         <p id="page-subtitle">A personal collection by or4acle.</p>
       </div>
-      <button id="sort" class="plain-button" type="button">Name ↑</button>
+      <div class="controls">
+        <div id="fav-tools" class="fav-tools" hidden>
+          <button id="fav-export" class="plain-button" type="button">Export</button>
+          <button id="fav-import" class="plain-button" type="button">Import</button>
+          <input id="fav-import-file" type="file" accept="application/json,.json" hidden>
+        </div>
+        <label class="select-wrap">
+          <span class="sr-only">Sort by</span>
+          <select id="sort" class="plain-button">
+            <option value="name">Name A–Z</option>
+            <option value="name-desc">Name Z–A</option>
+            <option value="new">Newest first</option>
+            <option value="old">Oldest first</option>
+            <option value="random">Random</option>
+          </select>
+        </label>
+        <div class="segmented" role="group" aria-label="Layout">
+          <button id="layout-rows" type="button" data-layout="rows" title="Keep original proportions">Rows</button>
+          <button id="layout-grid" type="button" data-layout="grid" title="Square tiles">Grid</button>
+        </div>
+      </div>
     </div>
-    <nav id="albums" class="albums" aria-label="Albums"></nav>
-    <section id="gallery" class="gallery" aria-label="Media gallery"></section>
+
+    <nav id="types" class="chips" aria-label="Media type" hidden>
+      <button class="chip" type="button" data-type="all">Everything</button>
+      <button class="chip" type="button" data-type="image">Photos</button>
+      <button class="chip" type="button" data-type="video">Videos</button>
+      <button class="chip" type="button" data-type="audio">Audio</button>
+    </nav>
+    <nav id="albums" class="chips albums" aria-label="Albums"></nav>
+
+    <section id="gallery" class="gallery" data-layout="rows" aria-label="Media gallery"></section>
+    <div id="sentinel" class="sentinel" aria-hidden="true"></div>
     <p id="empty" class="empty" hidden>Nothing here yet.</p>
     <p id="loading" class="empty">Loading your gallery…</p>
+    <noscript><p class="empty">This gallery needs JavaScript to run.</p></noscript>
   </main>
 
-  <dialog id="viewer" class="viewer">
+  <dialog id="viewer" class="viewer" aria-label="Media viewer">
     <button class="close" id="close" aria-label="Close viewer">×</button>
-    <div class="viewer-toolbar">
-      <button id="zoom-out" title="Zoom out" aria-label="Zoom out">−</button>
-      <button id="zoom-reset" title="Reset zoom">Fit</button>
-      <button id="zoom-in" title="Zoom in" aria-label="Zoom in">+</button>
+    <div class="viewer-toolbar" role="toolbar" aria-label="Viewer tools">
+      <button id="zoom-out" title="Zoom out ( - )" aria-label="Zoom out">−</button>
+      <button id="zoom-reset" title="Reset zoom ( 0 )">100%</button>
+      <button id="zoom-in" title="Zoom in ( + )" aria-label="Zoom in">+</button>
+      <button id="slideshow" title="Slideshow ( S )" aria-pressed="false">Slideshow</button>
       <button id="fullscreen" title="Toggle fullscreen">Fullscreen</button>
-      <button id="viewer-fav" title="Add to favourites">♡</button>
+      <button id="viewer-fav" title="Favourite ( F )" aria-pressed="false" aria-label="Add to favourites">♡</button>
+      <a id="viewer-download" class="tool-link" title="Download this file" href="#" download>Download</a>
+      <button id="viewer-link" title="Copy link to this item">Copy link</button>
     </div>
     <button class="nav prev" id="prev" aria-label="Previous item">‹</button>
     <div class="viewer-content" id="viewer-content"></div>
@@ -63,6 +99,8 @@
       </div>
     </div>
   </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script src="gallery.js"></script>
 </body>
