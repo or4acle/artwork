@@ -1,68 +1,7 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#171717">
-  <title>Favourites — or4acle</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body data-page="favs">
-  <header class="topbar">
-    <a class="brand" href="./">or4acle <span class="brand-muted">/ personal gallery</span></a>
-    <nav class="main-nav" aria-label="Main navigation">
-      <a class="nav-link" href="./">All media</a>
-      <a class="nav-link active" href="favs.html">Favourites <span id="fav-nav-count"></span></a>
-    </nav>
-    <div class="tools">
-      <label class="search-wrap">
-        <span class="sr-only">Search favourites</span>
-        <input id="search" type="search" placeholder="Search…" autocomplete="off">
-      </label>
-      <span id="count" class="count" aria-live="polite"></span>
-    </div>
-  </header>
-
-  <main>
-    <div class="section-head">
-      <div>
-        <h1 id="page-title">Favourites</h1>
-        <p id="page-subtitle">Personal favourites saved in this browser.</p>
-      </div>
-      <button id="sort" class="plain-button" type="button">Name ↑</button>
-    </div>
-    <section id="gallery" class="gallery" aria-label="Favourite media"></section>
-    <p id="empty" class="empty" hidden>No favourites yet. Use the heart on any item to save it here.</p>
-    <p id="loading" class="empty">Loading your favourites…</p>
-  </main>
-
-  <dialog id="viewer" class="viewer">
-    <button class="close" id="close" aria-label="Close viewer">×</button>
-    <div class="viewer-toolbar">
-      <button id="zoom-out" title="Zoom out" aria-label="Zoom out">−</button>
-      <button id="zoom-reset" title="Reset zoom">Fit</button>
-      <button id="zoom-in" title="Zoom in" aria-label="Zoom in">+</button>
-      <button id="fullscreen" title="Toggle fullscreen">Fullscreen</button>
-      <button id="viewer-fav" title="Add to favourites">♡</button>
-    </div>
-    <button class="nav prev" id="prev" aria-label="Previous item">‹</button>
-    <div class="viewer-content" id="viewer-content"></div>
-    <button class="nav next" id="next" aria-label="Next item">›</button>
-    <div class="caption" id="caption"></div>
-  </dialog>
-
-  <dialog id="content-warning" class="warning-dialog" aria-labelledby="warning-title">
-    <div class="warning-copy">
-      <span class="warning-kicker">CONTENT NOTICE</span>
-      <h2 id="warning-title">Adult content ahead</h2>
-      <p>This is or4acle’s personal gallery. It may contain adult, sensitive, or NSFW material. Please continue only if you are legally old enough to view this content where you live and are comfortable doing so.</p>
-      <div class="warning-actions">
-        <button id="warning-leave" class="warning-secondary" type="button">Leave site</button>
-        <button id="warning-continue" class="warning-primary" type="button">I understand — continue</button>
-      </div>
-    </div>
-  </dialog>
-
-  <script src="gallery.js"></script>
-</body>
-</html>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta http-equiv="refresh" content="0;url=./#/favs">
+<title>Favourites — or4acle</title>
+<script>location.replace("./#/favs");</script>
+<a href="./#/favs">Go to favourites</a>
