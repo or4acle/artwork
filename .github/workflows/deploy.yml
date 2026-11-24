@@ -1,4 +1,3 @@
-
 name: Build and deploy gallery
 
 on:
@@ -11,6 +10,7 @@ permissions:
   pages: write
   id-token: write
 
+# Do not cancel an in-progress deployment when another push arrives.
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -19,7 +19,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
@@ -47,14 +46,14 @@ jobs:
       - name: Assemble site
         run: |
           mkdir -p dist
-          cp index.html favs.html style.css gallery.js media.json robots.txt dist/
+          cp index.html favs.html style.css gallery.js media.json robots.txt splashes.txt dist/
           cp -r media thumbs dist/
           rm -f dist/media/.gitkeep
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload site artifact
+      - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
@@ -63,11 +62,9 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
     runs-on: ubuntu-latest
     needs: build
     timeout-minutes: 10
-
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
