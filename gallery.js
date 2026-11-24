@@ -38,6 +38,7 @@
     viewer: $("#viewer"), content: $("#viewer-content"), caption: $("#caption"),
     viewerFav: $("#viewer-fav"), download: $("#viewer-download"), slideshowBtn: $("#slideshow"),
     zoomReset: $("#zoom-reset"), warning: $("#content-warning"),
+    splash: $("#splash-text"),
   };
 
   const IMAGE_EXT = ["jpg", "jpeg", "png", "gif", "webp", "avif", "bmp", "svg"];
@@ -70,6 +71,33 @@
     for (let i = 0; i < text.length; i++) { h ^= text.charCodeAt(i); h = Math.imul(h, 16777619); }
     return h >>> 0;
   };
+
+  /* ------------------------------------------------------------------ *
+   * Splash texts — one line per entry in splashes.txt
+   * ------------------------------------------------------------------ */
+  let splashes = [];
+  let lastSplash = -1;
+  function showRandomSplash() {
+    if (!splashes.length || !els.splash) return;
+    let index = Math.floor(Math.random() * splashes.length);
+    if (splashes.length > 1 && index === lastSplash) index = (index + 1) % splashes.length;
+    lastSplash = index;
+    els.splash.textContent = splashes[index];
+  }
+  async function loadSplashes() {
+    try {
+      const response = await fetch("./splashes.txt", { cache: "no-store" });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      splashes = (await response.text()).split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter((line) => line && !line.startsWith("#"));
+    } catch (error) {
+      console.warn("Could not load splashes.txt:", error);
+      splashes = ["A gallery with absolutely no practical purpose."];
+    }
+    showRandomSplash();
+  }
+  els.splash?.addEventListener("click", showRandomSplash);
 
   let toastTimer;
   function toast(message) {
@@ -623,6 +651,12 @@
   els.viewer.addEventListener("cancel", (event) => { event.preventDefault(); closeViewer(); });
   els.viewer.addEventListener("close", () => { if (viewerActive) closeViewer(); });
 
+  $("#surprise-me").addEventListener("click", () => {
+    if (!visible.length) { toast("There is nothing to surprise you with."); return; }
+    const index = Math.floor(Math.random() * visible.length);
+    openAt(index);
+  });
+
   let searchTimer;
   els.search.addEventListener("input", () => {
     clearTimeout(searchTimer);
@@ -737,6 +771,7 @@
   async function start() {
     syncControls();
     await askWarning();
+    loadSplashes();
     try {
       const response = await fetch("./media.json", { cache: "no-store" });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
