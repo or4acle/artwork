@@ -30,10 +30,16 @@ main { max-width: 1700px; margin: 0 auto; padding: 25px; }
 .section-head { display: flex; justify-content: space-between; align-items: end; flex-wrap: wrap; gap: 14px 16px; margin: 2px 0 18px; }
 h1 { margin: 0; font-size: 23px; font-weight: 580; letter-spacing: -.04em; }
 .section-head p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+.splash-row { display: flex; align-items: center; gap: 7px; margin-top: 7px; }
+.splash-text { max-width: min(620px, 75vw); padding: 0; color: #c7a6b7; background: none; border: 0; cursor: pointer; text-align: left; font: italic 12px/1.4 Georgia, serif; }
+.splash-text:hover { color: #f0c5d9; }
+.splash-hint { color: #80677a; font-size: 10px; }
 .controls { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
 .fav-tools { display: flex; gap: 8px; }
 .plain-button { padding: 7px 10px; color: #bbb; background: transparent; border: 1px solid #383838; border-radius: 6px; cursor: pointer; font-size: 12px; }
 .plain-button:hover { color: white; border-color: #777; }
+.surprise-button { color: #d7b6ca; border-color: #594653; }
+.surprise-button:hover { color: #fff; border-color: #a17b91; }
 select.plain-button { padding-right: 6px; background: var(--bg); }
 .segmented { display: inline-flex; border: 1px solid #383838; border-radius: 6px; overflow: hidden; }
 .segmented button { padding: 7px 11px; color: #aaa; background: transparent; border: 0; cursor: pointer; font-size: 12px; }
